@@ -2,6 +2,9 @@
     "name": "stichoza/nbg-currency-cli",
     "description": "Command-line interface for National Bank of Georgia currency service",
     "keywords": ["cli", "command line", "nbg", "bank", "georgia", "currency", "rate"],
+    "bin": [
+        "bin/nbg"
+    ],
     "require": {
         "php": ">=7.4",
         "stichoza/nbg-currency": "^2.0"
