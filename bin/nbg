@@ -7,4 +7,7 @@ if (file_exists(__DIR__.'/../../../autoload.php')) {
     require __DIR__.'/../vendor/autoload.php';
 }
 
-(new Stichoza\NbgCurrencyCli\Command(array_slice($argv, 1)))->run();
+$app = new Symfony\Component\Console\Application('NBG Currency CLI', '0.0.0');
+$app->add(new Stichoza\NbgCurrencyCli\CurrencyCommand);
+
+$app->run();
