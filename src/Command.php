@@ -3,6 +3,7 @@
 namespace Stichoza\NbgCurrencyCli;
 
 use Stichoza\NbgCurrency\NbgCurrency;
+use Codedungeon\PHPCliColors\Color;
 
 class Command {
 

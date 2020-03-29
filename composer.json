@@ -7,7 +7,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "stichoza/nbg-currency": "^2.0"
+        "stichoza/nbg-currency": "^2.0",
+        "codedungeon/php-cli-colors": "^1.11"
     },
     "license": "MIT",
     "authors": [
