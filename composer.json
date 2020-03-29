@@ -6,7 +6,9 @@
         "bin/nbg"
     ],
     "require": {
-        "php": ">=7.4",
+        "php": "^7.2",
+        "ext-soap": "*",
+        "symfony/console": "^4.0|^5.0",
         "stichoza/nbg-currency": "^2.0",
         "codedungeon/php-cli-colors": "^1.11"
     },
