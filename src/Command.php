@@ -27,24 +27,29 @@ class Command {
 
         if (is_numeric($first)) {
             if ($second === 'gel' || $second === 'to') {
-                echo $this->rate($third ?? self::FALLBACK, $first, true);
+                echo $this->rate($third ?? self::FALLBACK, $first, true) . PHP_EOL;
             } else {
-                echo $this->rate($second ?? self::FALLBACK, $first);
+                echo $this->rate($second ?? self::FALLBACK, $first) . PHP_EOL;
             }
         } else {
-            $currency = $this->get($first ?? self::FALLBACK);
+            foreach ($this->arguments ?? [self::FALLBACK] as $c) {
+                $currency = $this->get($c);
 
-            echo $currency->rate;
+                if (!$this->hasOption('plain')) {
+                    echo strtoupper($c) . ': ';
+                    echo Color::BOLD . $currency->rate . Color::RESET . ' ';
+                    echo [Color::GREEN, '', Color::RED][$currency->change + 1];
+                    echo ['▼', '', '▲'][$currency->change + 1] . ' ';
+                    echo abs($currency->diff);
+                    echo Color::GRAY . ' (' . $currency->description . ')' . Color::RESET;
+                } else {
+                    echo $currency->rate;
+                }
 
-            if (!$this->hasOption('plain')) {
-                echo " ";
-                echo [Color::GREEN, '', Color::RED][$currency->change + 1];
-                echo " ", $currency->diff;
-                echo ['', '', '⬆'][$currency->change + 1];
+                echo PHP_EOL;
             }
         }
 
-        echo PHP_EOL;
     }
 
     protected function get($currency): object
