@@ -38,8 +38,9 @@ class Command {
 
             if (!$this->hasOption('plain')) {
                 echo " ";
-                echo ['-', ':', '+'][$currency->change - 1];
-                echo $currency->diff;
+                echo [Color::GREEN, '', Color::RED][$currency->change + 1];
+                echo " ", $currency->diff;
+                echo ['', '', '⬆'][$currency->change + 1];
             }
         }
 
