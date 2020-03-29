@@ -7,4 +7,4 @@ if (file_exists(__DIR__.'/../../../autoload.php')) {
     require __DIR__.'/../vendor/autoload.php';
 }
 
-(new Stichoza\NbgCurrencyCli\Command)->test('eur');
+(new Stichoza\NbgCurrencyCli\Command)->run(...array_slice($argv, 1));
