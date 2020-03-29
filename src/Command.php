@@ -33,6 +33,10 @@ class Command {
             }
         } else {
             foreach ($this->arguments ?? [self::FALLBACK] as $c) {
+                if (substr($c, 0, 2) === '--') {
+                    continue;
+                }
+
                 $currency = $this->get($c);
 
                 if (!$this->hasOption('plain')) {
