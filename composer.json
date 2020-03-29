@@ -1,0 +1,14 @@
+{
+    "name": "stichoza/nbg-currency-cli",
+    "description": "Command-line interface for National Bank of Georgia currency service",
+    "require": {
+        "stichoza/nbg-currency": "^1.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Levan Velijanashvili",
+            "email": "me@stichoza.com"
+        }
+    ]
+}
