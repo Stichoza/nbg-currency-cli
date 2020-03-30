@@ -43,9 +43,9 @@ class Command {
 
         if (is_numeric($first)) {
             if ($second === 'gel' || $second === 'to') {
-                echo $this->rate($third ?? self::FALLBACK, $first, true) . PHP_EOL;
+                echo $this->rate($third ?? self::FALLBACK, $first, true, true) . PHP_EOL;
             } else {
-                echo $this->rate($second ?? self::FALLBACK, $first) . PHP_EOL;
+                echo $this->rate($second ?? self::FALLBACK, $first, false, true) . PHP_EOL;
             }
         } else {
             foreach ($this->arguments ?? [self::FALLBACK] as $c) {
@@ -53,9 +53,9 @@ class Command {
                     continue;
                 }
 
-                $currency = $this->get($c);
-
                 if (!$this->hasOption('plain')) {
+                    $currency = $this->get($c);
+
                     echo strtoupper($c) . ': ';
                     echo Color::BOLD . $currency->rate . Color::RESET . ' ';
                     echo [Color::GREEN, '', Color::RED][$currency->change + 1];
@@ -63,7 +63,7 @@ class Command {
                     echo abs($currency->diff);
                     echo Color::GRAY . ' (' . $currency->description . ')' . Color::RESET;
                 } else {
-                    echo $currency->rate;
+                    echo $this->get($c, true)->rate;
                 }
 
                 echo PHP_EOL;
@@ -72,11 +72,11 @@ class Command {
 
     }
 
-    protected function get($currency): object
+    protected function get($currency, bool $normalize = false): object
     {
         $data = (object) NbgCurrency::get($currency);
 
-        if ($this->hasOption('normalize')) {
+        if ($normalize || $this->hasOption('normalize')) {
             $multiplier = ((int) $data->description) ?: 1; // Parse multiplier from description
 
             $data->rate /= $multiplier;
@@ -87,9 +87,9 @@ class Command {
         return $data;
     }
 
-    protected function rate($currency, float $amount = 1, bool $inverse = false)
+    protected function rate($currency, float $amount = 1, bool $inverse = false, bool $normalize = false)
     {
-        $rate = $this->get($currency)->rate ?? 0;
+        $rate = $this->get($currency, $normalize)->rate ?? 0;
 
         if ($inverse) {
             return round($amount / ($rate ?: 1), self::PRECISION);
