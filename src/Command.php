@@ -24,7 +24,7 @@ class Command {
     public function run(): void
     {
         if ($this->hasOption('help')) {
-            echo Color::bold(), "NBG Currency CLI ", Color::reset(), Color::green(), "by Stichoza\n", Color::reset(),
+            echo Color::bold(), "NBG Currency CLI ", Color::reset(), Color::light_green(), "by Stichoza\n", Color::reset(),
                 "  Command-line tool to get currency rates by National Bank of Georgia.\n\n",
                 Color::yellow(), "Options:", Color::reset(), "\n",
                 Color::bold_green(), "  --help         ", Color::reset(), "  Display this help page.\n",
@@ -57,11 +57,11 @@ class Command {
                     $currency = $this->get($c);
 
                     echo strtoupper($c) . ': ';
-                    echo Color::BOLD . $currency->rate . Color::RESET . ' ';
-                    echo [Color::GREEN, '', Color::RED][$currency->change + 1];
+                    echo Color::bold() . $currency->rate . Color::reset() . ' ';
+                    echo [Color::light_green(), '', Color::red()][$currency->change + 1];
                     echo ['▼', '', '▲'][$currency->change + 1] . ' ';
                     echo abs($currency->diff);
-                    echo Color::GRAY . ' (' . $currency->description . ')' . Color::RESET;
+                    echo Color::gray() . ' (' . $currency->description . ')' . Color::reset();
                 } else {
                     echo $this->get($c, true)->rate;
                 }
