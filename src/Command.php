@@ -32,7 +32,8 @@ class Command
     public function run(): void
     {
         if ($this->hasOption('help')) {
-            echo require('../resources/help.php');
+            $lines = require __DIR__ . '/../resources/help.php';
+            echo implode(PHP_EOL, $lines);
         } elseif (is_numeric($this->arguments[0] ?? null)) {
             [$first, $second, $third] = $this->arguments;
             if ($second === 'gel' || $second === 'to') {
