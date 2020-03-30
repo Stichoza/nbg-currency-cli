@@ -2,7 +2,7 @@
 
 Command-line tool for National Bank of Georgia currency service.
 
-> **Note:** If you're looking for a non-cli PHP package, check out [stichoza/nbg-currency](https://github.com/Stichoza/nbg-currency) instead.
+> **Note:** If you're looking for a non-cli PHP package to use in your code, see **[stichoza/nbg-currency](https://github.com/Stichoza/nbg-currency)** instead.
 
 ## Installation
 
