@@ -5,8 +5,8 @@ namespace Stichoza\NbgCurrencyCli;
 use Stichoza\NbgCurrency\NbgCurrency;
 use Codedungeon\PHPCliColors\Color;
 
-class Command {
-
+class Command
+{
     const PRECISION = 4;
 
     const FALLBACK = 'usd';
@@ -16,32 +16,25 @@ class Command {
      */
     protected $arguments;
 
+    /**
+     * Command constructor.
+     *
+     * @param array $arguments Arguments from $argv array
+     */
     public function __construct($arguments = [])
     {
         $this->arguments = $arguments;
     }
 
+    /**
+     * Entry point of command
+     */
     public function run(): void
     {
         if ($this->hasOption('help')) {
-            echo Color::bold(), "NBG Currency CLI ", Color::light_green(), "by Stichoza\n", Color::reset(),
-                "  Command-line tool to get currency rates by National Bank of Georgia.\n\n",
-                Color::light_yellow(), "Options:", Color::reset(), "\n",
-                Color::bold_green(), "  --help         ", Color::reset(), "  Display this help page.\n",
-                Color::bold_green(), "  --plain        ", Color::reset(), "  Display plain results without colors.\n",
-                Color::bold_green(), "  --normalize    ", Color::reset(), "  Convert rates to single entity if rate is given for amount larger than 1.\n\n",
-                Color::light_yellow(), "Example commands:", Color::reset(), "\n",
-                Color::bold_green(), "  nbg usd        ", Color::reset(), "  Get currency rate and change for USD.\n",
-                Color::bold_green(), "  nbg usd --plain", Color::reset(), "  Get currency rate for USD.\n",
-                Color::bold_green(), "  nbg usd eur gbp", Color::reset(), "  Get currency rate for USD, EUR, GBP.\n",
-                Color::bold_green(), "  nbg 150 usd    ", Color::reset(), "  Get equivalent of 150 USD in GEL.\n",
-                Color::bold_green(), "  nbg 150 gel usd", Color::reset(), "  Get equivalent of 150 GEL in USD.\n";
-            return;
-        }
-
-        [$first, $second, $third] = $this->arguments;
-
-        if (is_numeric($first)) {
+            echo require('../resources/help.php');
+        } elseif (is_numeric($this->arguments[0] ?? null)) {
+            [$first, $second, $third] = $this->arguments;
             if ($second === 'gel' || $second === 'to') {
                 echo $this->rate($third ?? self::FALLBACK, $first, true, true) . PHP_EOL;
             } else {
@@ -69,10 +62,17 @@ class Command {
                 echo PHP_EOL;
             }
         }
-
     }
 
-    protected function get($currency, bool $normalize = false): object
+    /**
+     * Get currency raw object.
+     *
+     * @param string $currency Currency to get
+     * @param bool $normalize Normalize amounts from rate
+     *
+     * @return object
+     */
+    protected function get(string $currency, bool $normalize = false): object
     {
         $data = (object) NbgCurrency::get($currency);
 
@@ -87,7 +87,17 @@ class Command {
         return $data;
     }
 
-    protected function rate($currency, float $amount = 1, bool $inverse = false, bool $normalize = false)
+    /**
+     * Get acculated currency rate
+     *
+     * @param string $currency Currency to convert
+     * @param float $amount Amount to convert
+     * @param bool $inverse Amount given in local currency, return converted to $currency
+     * @param bool $normalize Normalize amounts from rate
+     *
+     * @return float Converted amount
+     */
+    protected function rate(string $currency, float $amount = 1, bool $inverse = false, bool $normalize = false): float
     {
         $rate = $this->get($currency, $normalize)->rate ?? 0;
 
@@ -99,7 +109,7 @@ class Command {
     }
 
     /**
-     * If the command hac option passed
+     * Whether the command has option passed or not.
      *
      * @param string $option Option name
      *
@@ -109,5 +119,4 @@ class Command {
     {
         return in_array('--' . $option, $this->arguments);
     }
-
 }
