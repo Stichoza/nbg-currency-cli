@@ -54,7 +54,7 @@ class Command
     {
         $data = (object) NbgCurrency::get($currency);
 
-        if ($normalize || $this->hasOption('normalize')) {
+        if ($normalize || $this->hasOption('normalize') || $this->hasOption('normalized')) {
             $multiplier = ((int) $data->description) ?: 1; // Parse multiplier from description
 
             $data->rate /= $multiplier;
