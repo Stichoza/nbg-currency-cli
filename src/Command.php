@@ -61,7 +61,7 @@ class Command {
                     echo [Color::light_green(), '', Color::red()][$currency->change + 1];
                     echo ['▼', '', '▲'][$currency->change + 1] . ' ';
                     echo abs($currency->diff);
-                    echo Color::gray() . ' (' . $currency->description . ')' . Color::reset();
+                    echo Color::reset(), Color::gray() . ' (' . $currency->description . ')' . Color::reset();
                 } else {
                     echo $this->get($c, true)->rate;
                 }
