@@ -12,7 +12,7 @@ class Command
     const FALLBACK = 'usd';
 
     /**
-     * @var array
+     * @var array Arguments from $argv array
      */
     protected $arguments;
 
@@ -32,37 +32,14 @@ class Command
     public function run(): void
     {
         if ($this->hasOption('help')) {
-            $lines = require __DIR__ . '/../resources/help.php';
-            echo implode(PHP_EOL, $lines);
+            echo $this->help();
         } elseif (is_numeric($this->arguments[0] ?? null)) {
-            [$first, $second, $third] = $this->arguments;
-            if ($second === 'gel' || $second === 'to') {
-                echo $this->rate($third ?? self::FALLBACK, $first, true, true) . PHP_EOL;
-            } else {
-                echo $this->rate($second ?? self::FALLBACK, $first, false, true) . PHP_EOL;
-            }
+            echo $this->converted();
         } else {
-            foreach ($this->arguments ?: [self::FALLBACK] as $c) {
-                if (substr($c, 0, 2) === '--') {
-                    continue;
-                }
-
-                if (!$this->hasOption('plain')) {
-                    $currency = $this->get($c);
-
-                    echo strtoupper($c) . ': ';
-                    echo Color::bold() . $currency->rate . Color::reset() . ' ';
-                    echo [Color::light_green(), '', Color::red()][$currency->change + 1];
-                    echo ['▼', '', '▲'][$currency->change + 1] . ' ';
-                    echo abs($currency->diff);
-                    echo Color::reset(), Color::gray() . ' (' . $currency->description . ')' . Color::reset();
-                } else {
-                    echo $this->get($c, true)->rate;
-                }
-
-                echo PHP_EOL;
-            }
+            echo $this->list();
         }
+
+        echo PHP_EOL;
     }
 
     /**
@@ -119,5 +96,64 @@ class Command
     protected function hasOption($option): bool
     {
         return in_array('--' . $option, $this->arguments);
+    }
+
+    /**
+     * Get converted amount
+     *
+     * @return string Results
+     */
+    protected function converted(): string
+    {
+        [$first, $second, $third] = $this->arguments;
+
+        if ($second === 'gel' || $second === 'to') {
+            return $this->rate($third ?? self::FALLBACK, $first, true, true);
+        } else {
+            return $this->rate($second ?? self::FALLBACK, $first, false, true);
+        }
+    }
+
+    /**
+     * Get list of currencies
+     *
+     * @return string Results
+     */
+    protected function list(): string
+    {
+        $results = [];
+
+        foreach ($this->arguments ?: [self::FALLBACK] as $c) {
+            if (substr($c, 0, 2) === '--') {
+                continue;
+            }
+
+            if (!$this->hasOption('plain')) {
+                $currency = $this->get($c);
+
+                $results[] = strtoupper($c) . ': '
+                    . Color::bold() . $currency->rate . Color::reset() . ' '
+                    . [Color::light_green(), '', Color::red()][$currency->change + 1]
+                    . ['▼', '', '▲'][$currency->change + 1] . ' '
+                    . abs($currency->diff)
+                    . Color::reset() . Color::gray() . ' (' . $currency->description . ')' . Color::reset();
+            } else {
+                $results[] = $this->get($c, true)->rate;
+            }
+        }
+
+        return implode(PHP_EOL, $results);
+    }
+
+    /**
+     * Get help page
+     *
+     * @return string Help page
+     */
+    protected function help(): string
+    {
+        $lines = require __DIR__ . '/../resources/help.php';
+
+        return implode(PHP_EOL, $lines);
     }
 }
