@@ -48,7 +48,7 @@ class Command {
                 echo $this->rate($second ?? self::FALLBACK, $first, false, true) . PHP_EOL;
             }
         } else {
-            foreach ($this->arguments ?? [self::FALLBACK] as $c) {
+            foreach ($this->arguments ?: [self::FALLBACK] as $c) {
                 if (substr($c, 0, 2) === '--') {
                     continue;
                 }
