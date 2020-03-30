@@ -27,6 +27,7 @@ class Command {
             echo Color::bold(), "NBG Currency CLI ", Color::reset(), Color::green(), "by Stichoza\n", Color::reset(),
                 "  Command-line tool to get currency rates by National Bank of Georgia.\n\n",
                 Color::yellow(), "Options:", Color::reset(), "\n",
+                Color::bold_green(), "  --help         ", Color::reset(), "  Display this help page.\n",
                 Color::bold_green(), "  --plain        ", Color::reset(), "  Display plain results without colors.\n",
                 Color::bold_green(), "  --normalize    ", Color::reset(), "  Convert rates to single entity if rate is given for amount larger than 1.\n\n",
                 Color::yellow(), "Example commands:", Color::reset(), "\n",
