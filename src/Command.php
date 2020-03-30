@@ -58,7 +58,17 @@ class Command {
 
     protected function get($currency): object
     {
-        return (object) NbgCurrency::get($currency);
+        $data = (object) NbgCurrency::get($currency);
+
+        if ($this->hasOption('normalize')) {
+            $multiplier = ((int) $data->description) ?: 1; // Parse multiplier from description
+
+            $data->rate /= $multiplier;
+            $data->diff /= $multiplier;
+            $data->description = preg_replace('/^\d+\s/', '1 ', $data->description);
+        }
+
+        return $data;
     }
 
     protected function rate($currency, float $amount = 1, bool $inverse = false)
