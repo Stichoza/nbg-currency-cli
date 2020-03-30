@@ -82,7 +82,7 @@ class Command
         if ($inverse) {
             return round($amount / ($rate ?: 1), self::PRECISION);
         } else {
-            return $rate * $amount;
+            return round($rate * $amount, self::PRECISION);
         }
     }
 
@@ -132,13 +132,13 @@ class Command
                 $currency = $this->get($c);
 
                 $results[] = strtoupper($c) . ': '
-                    . Color::bold() . $currency->rate . Color::reset() . ' '
+                    . Color::bold() . round($currency->rate, self::PRECISION) . Color::reset() . ' '
                     . [Color::light_green(), '', Color::red()][$currency->change + 1]
                     . ['▼', '', '▲'][$currency->change + 1] . ' '
-                    . abs($currency->diff)
+                    . round(abs($currency->diff), self::PRECISION)
                     . Color::reset() . Color::gray() . ' (' . $currency->description . ')' . Color::reset();
             } else {
-                $results[] = $this->get($c, true)->rate;
+                $results[] = round($this->get($c, true)->rate, self::PRECISION);
             }
         }
 
