@@ -123,11 +123,11 @@ class Command
     {
         $results = [];
 
-        foreach ($this->arguments ?: [self::FALLBACK] as $c) {
-            if (substr($c, 0, 2) === '--') {
-                continue;
-            }
+        $arguments = array_filter($this->arguments, function ($argument) {
+            return substr($argument, 0, 2) !== '--';
+        }) ?: [self::FALLBACK];
 
+        foreach ($arguments as $c) {
             if (!$this->hasOption('plain')) {
                 $currency = $this->get($c);
 
