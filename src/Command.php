@@ -81,9 +81,9 @@ class Command
 
         if ($inverse) {
             return round($amount / ($rate ?: 1), self::PRECISION);
-        } else {
-            return round($rate * $amount, self::PRECISION);
         }
+
+        return round($rate * $amount, self::PRECISION);
     }
 
     /**
@@ -109,9 +109,9 @@ class Command
 
         if ($second === 'gel' || $second === 'to') {
             return $this->rate($third ?? self::FALLBACK, $first, true, true);
-        } else {
-            return $this->rate($second ?? self::FALLBACK, $first, false, true);
         }
+
+        return $this->rate($second ?? self::FALLBACK, $first, false, true);
     }
 
     /**
