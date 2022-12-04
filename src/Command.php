@@ -7,9 +7,9 @@ use Codedungeon\PHPCliColors\Color;
 
 class Command
 {
-    const PRECISION = 4;
+    protected const PRECISION = 4;
 
-    const FALLBACK = 'usd';
+    protected const FALLBACK = 'usd';
 
     /**
      * @var array Arguments from $argv array
@@ -21,7 +21,7 @@ class Command
      *
      * @param array $arguments Arguments from $argv array
      */
-    public function __construct($arguments = [])
+    public function __construct(array $arguments = [])
     {
         $this->arguments = $arguments;
     }
@@ -66,7 +66,7 @@ class Command
     }
 
     /**
-     * Get acculated currency rate
+     * Get calculated currency rate
      *
      * @param string $currency Currency to convert
      * @param float $amount Amount to convert
@@ -93,9 +93,9 @@ class Command
      *
      * @return bool
      */
-    protected function hasOption($option): bool
+    protected function hasOption(string $option): bool
     {
-        return in_array('--' . $option, $this->arguments);
+        return in_array('--' . $option, $this->arguments, true);
     }
 
     /**
@@ -124,7 +124,7 @@ class Command
         $results = [];
 
         $arguments = array_filter($this->arguments, function ($argument) {
-            return substr($argument, 0, 2) !== '--';
+            return strpos($argument, '--') !== 0;
         }) ?: [self::FALLBACK];
 
         foreach ($arguments as $c) {
