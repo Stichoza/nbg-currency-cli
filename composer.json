@@ -3,6 +3,7 @@
     "description": "Command-line tool for National Bank of Georgia currency service",
     "keywords": ["cli", "command line", "nbg", "bank", "georgia", "currency", "rate"],
     "license": "MIT",
+    "type": "library",
     "homepage": "https://github.com/Stichoza/nbg-currency-cli",
     "bin": [
         "bin/nbg"
