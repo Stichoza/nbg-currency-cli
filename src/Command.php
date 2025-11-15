@@ -2,6 +2,7 @@
 
 namespace Stichoza\NbgCurrencyCli;
 
+use Exception;
 use Stichoza\NbgCurrency\NbgCurrency;
 use Codedungeon\PHPCliColors\Color;
 
@@ -31,12 +32,17 @@ class Command
      */
     public function run(): int
     {
-        if ($this->hasOption('help')) {
-            echo $this->help();
-        } elseif (is_numeric($this->arguments[0] ?? null)) {
-            echo $this->converted();
-        } else {
-            echo $this->list();
+        try {
+            if ($this->hasOption('help')) {
+                echo $this->help();
+            } elseif (is_numeric($this->arguments[0] ?? null)) {
+                echo $this->converted();
+            } else {
+                echo $this->list();
+            }
+        } catch (Exception $e) {
+            echo Color::red() . Color::bold() . 'Error: ' . Color::reset() . $e->getMessage() . PHP_EOL;
+            return 1;
         }
 
         echo PHP_EOL;
@@ -50,6 +56,11 @@ class Command
      * @param bool $normalize Normalize amounts from rate
      *
      * @return object
+     * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\DateNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\InvalidDateException
+     * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
     protected function get(string $currency, bool $normalize = false): object
     {
@@ -75,6 +86,11 @@ class Command
      * @param bool $normalize Normalize amounts from rate
      *
      * @return float Converted amount
+     * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\DateNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\InvalidDateException
+     * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
     protected function rate(string $currency, float $amount = 1, bool $inverse = false, bool $normalize = false): float
     {
@@ -103,6 +119,11 @@ class Command
      * Get converted amount
      *
      * @return string Results
+     * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\DateNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\InvalidDateException
+     * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
     protected function converted(): string
     {
@@ -119,6 +140,11 @@ class Command
      * Get list of currencies
      *
      * @return string Results
+     * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\DateNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\InvalidDateException
+     * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
+     * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
     protected function list(): string
     {
