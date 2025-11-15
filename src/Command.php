@@ -117,13 +117,13 @@ class Command
      */
     protected function converted(): float
     {
-        [$first, $second, $third] = $this->arguments;
+        [$first, $second, $third] = [...$this->arguments, null, null];
 
         if ($second === 'gel' || $second === 'to') {
-            return $this->rate($third ?? self::FALLBACK, $first, true);
+            return $this->rate($third ?? self::FALLBACK, (float) $first, true);
         }
 
-        return $this->rate($second ?? self::FALLBACK, $first);
+        return $this->rate($second ?? self::FALLBACK, (float) $first);
     }
 
     /**
