@@ -29,7 +29,7 @@ class Command
     /**
      * Entry point of command
      */
-    public function run(): void
+    public function run(): int
     {
         if ($this->hasOption('help')) {
             echo $this->help();
@@ -40,6 +40,7 @@ class Command
         }
 
         echo PHP_EOL;
+        return 0;
     }
 
     /**
