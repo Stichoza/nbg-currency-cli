@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stichoza\NbgCurrencyCli;
 
 use Exception;
@@ -106,14 +108,14 @@ class Command
     /**
      * Get converted amount
      *
-     * @return string Results
+     * @return float Results
      * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
      * @throws \Stichoza\NbgCurrency\Exceptions\DateNotFoundException
      * @throws \Stichoza\NbgCurrency\Exceptions\InvalidDateException
      * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
      * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
-    protected function converted(): string
+    protected function converted(): float
     {
         [$first, $second, $third] = $this->arguments;
 
