@@ -15,7 +15,7 @@ class Command
     /**
      * @var array Arguments from $argv array
      */
-    protected $arguments;
+    protected array $arguments;
 
     /**
      * Command constructor.
@@ -53,7 +53,6 @@ class Command
      * Get currency raw object.
      *
      * @param string $currency Currency to get
-     * @param bool $normalize Normalize amounts from rate
      *
      * @return object
      * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
@@ -62,19 +61,9 @@ class Command
      * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
      * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
-    protected function get(string $currency, bool $normalize = false): object
+    protected function get(string $currency): object
     {
-        $data = (object) NbgCurrency::get($currency);
-
-        if ($normalize || $this->hasOption('normalize') || $this->hasOption('normalized')) {
-            $multiplier = ((int) $data->description) ?: 1; // Parse multiplier from description
-
-            $data->rate /= $multiplier;
-            $data->diff /= $multiplier;
-            $data->description = preg_replace('/^\d+\s/', '1 ', $data->description);
-        }
-
-        return $data;
+        return NbgCurrency::get($currency);
     }
 
     /**
@@ -83,7 +72,6 @@ class Command
      * @param string $currency Currency to convert
      * @param float $amount Amount to convert
      * @param bool $inverse Amount given in local currency, return converted to $currency
-     * @param bool $normalize Normalize amounts from rate
      *
      * @return float Converted amount
      * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
@@ -92,9 +80,9 @@ class Command
      * @throws \Stichoza\NbgCurrency\Exceptions\LanguageNotFoundException
      * @throws \Stichoza\NbgCurrency\Exceptions\RequestFailedException
      */
-    protected function rate(string $currency, float $amount = 1, bool $inverse = false, bool $normalize = false): float
+    protected function rate(string $currency, float $amount = 1, bool $inverse = false): float
     {
-        $rate = $this->get($currency, $normalize)->rate ?? 0;
+        $rate = $this->get($currency)->rate ?? 0;
 
         if ($inverse) {
             return round($amount / ($rate ?: 1), self::PRECISION);
@@ -130,14 +118,14 @@ class Command
         [$first, $second, $third] = $this->arguments;
 
         if ($second === 'gel' || $second === 'to') {
-            return $this->rate($third ?? self::FALLBACK, $first, true, true);
+            return $this->rate($third ?? self::FALLBACK, $first, true);
         }
 
-        return $this->rate($second ?? self::FALLBACK, $first, false, true);
+        return $this->rate($second ?? self::FALLBACK, $first);
     }
 
     /**
-     * Get list of currencies
+     * Get a list of currencies
      *
      * @return string Results
      * @throws \Stichoza\NbgCurrency\Exceptions\CurrencyNotFoundException
@@ -150,9 +138,8 @@ class Command
     {
         $results = [];
 
-        $arguments = array_filter($this->arguments, function ($argument) {
-            return strpos($argument, '--') !== 0;
-        }) ?: [self::FALLBACK];
+        $arguments = array_filter($this->arguments, static fn ($argument) => !str_starts_with($argument, '--'))
+            ?: [self::FALLBACK];
 
         foreach ($arguments as $c) {
             if (!$this->hasOption('plain')) {
@@ -163,9 +150,9 @@ class Command
                     . [Color::light_green(), '', Color::red()][$currency->change + 1]
                     . ['▼', '', '▲'][$currency->change + 1] . ' '
                     . round(abs($currency->diff), self::PRECISION)
-                    . Color::reset() . Color::gray() . ' (' . $currency->description . ')' . Color::reset();
+                    . Color::reset() . Color::gray() . ' (' . $currency->name . ')' . Color::reset();
             } else {
-                $results[] = round($this->get($c, true)->rate, self::PRECISION);
+                $results[] = round($this->get($c)->rate, self::PRECISION);
             }
         }
 
