@@ -15,14 +15,14 @@ class Command
     protected const FALLBACK = 'usd';
 
     /**
-     * @var array Arguments from $argv array
+     * @var array<int, string> Arguments from $argv array
      */
     protected array $arguments;
 
     /**
      * Command constructor.
      *
-     * @param array $arguments Arguments from $argv array
+     * @param array<int, string> $arguments Arguments from $argv array
      */
     public function __construct(array $arguments = [])
     {
