@@ -9,10 +9,8 @@
         "bin/nbg"
     ],
     "require": {
-        "php": "^7.2|^8.0",
-        "ext-soap": "*",
-        "symfony/console": "^4.0|^5.0",
-        "stichoza/nbg-currency": "^2.0.3",
+        "php": "^8.1",
+        "stichoza/nbg-currency": "^3.1",
         "codedungeon/php-cli-colors": "^1.11"
     },
     "authors": [
